@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crops</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <h1>Crop Field Prediction</h1>
+      <br />
+      <input type="number" id="N" placeholder="Nitrogen" />
+
+      <input type="number" id="P" placeholder="Phosphorus" />
+
+      <input type="number" id="K" placeholder="Potassium" />
+
+      <br /><br />
+      <input type="number" id="temperature" placeholder="Temperature" />
+
+      <input type="number" id="humidity" placeholder="Humidity" />
+
+      <input type="number" id="ph" placeholder="pH" />
+      <br /><br />
+      <input type="number" id="rainfall" placeholder="Rainfall" />
+
+      <br /><br />
+      <button id="btn-submit">Submit</button>
+      <h2 id="prediction-text"></h2>
+    </div>
+  </body>
+
+  <script>
+    $("#btn-submit").click((e) => {
+      e.preventDefault();
+
+      nitrogen = $("#N").val();
+      phosphorus = $("#P").val();
+      potassium = $("#K").val();
+      temperature = $("#temperature").val();
+      humidity = $("#humidity").val();
+      ph = $("#ph").val();
+      rainfall = $("#rainfall").val();
+
+      url = "https://crop-prediction-fyp.herokuapp.com/crop";
+      data = {
+        N: nitrogen,
+        P: phosphorus,
+        K: potassium,
+        temperature: temperature,
+        humidity: humidity,
+        ph: ph,
+        rainfall:rainfall,
+      };
+      console.log("API");
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "inka6d79c0ef32e1535c185db31e83200298f47f0fa",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.json())
+        .then((responseData) => {
+          
+          if (responseData.error == 0) {
+            $('#prediction-text').text("Prediction: "+responseData["prediction"])
+          } else {
+            alert(responseData["message"]);
+          }
+        });
+    });
+  </script>
+</html>
